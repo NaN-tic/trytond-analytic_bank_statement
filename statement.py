@@ -192,7 +192,8 @@ class StatementMoveLine:
                 move_line.analytic_lines = []
                 for account in self.analytic_accounts.accounts:
                     analytic_line = AnalyticLine()
-                    analytic_line.name = self.description
+                    analytic_line.name = (self.description if self.description
+                        else self.line.description)
                     analytic_line.debit = move_line.debit
                     analytic_line.credit = move_line.credit
                     analytic_line.account = account

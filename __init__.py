@@ -7,4 +7,5 @@ from .statement import *
 def register():
     Pool.register(
         StatementMoveLine,
+        AnalyticAccountEntry,
         module='analytic_bank_statement', type_='model')

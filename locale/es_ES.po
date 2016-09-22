@@ -2,6 +2,26 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "error:account.bank.statement.move.line:"
+msgid "Some mandatory root account are missing on \"%(name)s\""
+msgstr "Faltan algunas cuentas analíticas obligatorias en \"%(name)s\"."
+
+msgctxt "field:account.bank.statement.journal,analytics_on_bank_moves:"
+msgid "Analytics on Bank Moves"
+msgstr "Analítica en apuntes del banco"
+
 msgctxt "field:account.bank.statement.move.line,analytic_accounts:"
 msgid "Analytic Accounts"
 msgstr "Cuentas analíticas"
+
+msgctxt "field:account.bank.statement.move.line,analytic_accounts_size:"
+msgid "Analytic Accounts Size"
+msgstr "Tamaño de cuentas analíticas"
+
+msgctxt "help:account.bank.statement.journal,analytics_on_bank_moves:"
+msgid ""
+"Generate analytic lines in the move lines on journal accounts from Bank "
+"Statement Move Lines."
+msgstr ""
+"Genera lineas analíticas en los apuntes a las cuentas del diario generados "
+"desde líneas de extracto bancario."

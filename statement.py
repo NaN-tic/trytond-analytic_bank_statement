@@ -4,8 +4,16 @@ from trytond.model import fields
 from trytond.modules.analytic_account import AnalyticMixin
 from trytond.pool import Pool, PoolMeta
 
-__all__ = ['StatementMoveLine', 'AnalyticAccountEntry']
+__all__ = ['BankJournal', 'StatementMoveLine', 'AnalyticAccountEntry']
 __metaclass__ = PoolMeta
+
+
+class BankJournal:
+    __name__ = 'account.bank.statement.journal'
+    __metaclass__ = PoolMeta
+    analytics_on_bank_moves = fields.Boolean('Analytics on Bank Moves',
+        help='Generate analytic lines in the move lines on journal accounts '
+        'from Bank Statement Move Lines.')
 
 
 class StatementMoveLine(AnalyticMixin):
@@ -16,12 +24,16 @@ class StatementMoveLine(AnalyticMixin):
         AnalyticLine = pool.get('analytic_account.line')
 
         move_lines = super(StatementMoveLine, self)._get_move_lines()
+
+        analytics_on_bank_moves = self.line.statement.journal\
+            .analytics_on_bank_moves
         if move_lines and self.analytic_accounts:
             for analytic_account in self.analytic_accounts:
                 if analytic_account.account:
                     account = analytic_account.account
                     for move_line in move_lines:
-                        if move_line.account != self.account:
+                        if (not analytics_on_bank_moves
+                                and move_line.account != self.account):
                             continue
                         analytic_line = AnalyticLine()
                         analytic_line.name = (self.description

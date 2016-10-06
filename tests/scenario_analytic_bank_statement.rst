@@ -5,16 +5,14 @@ Analytic Bank Statement Scenario
 Imports::
 
     >>> import datetime
-    >>> from dateutil.relativedelta import relativedelta
     >>> from decimal import Decimal
-    >>> from operator import attrgetter
     >>> from proteus import config, Model, Wizard
     >>> from trytond.modules.company.tests.tools import create_company, \
     ...     get_company
     >>> from trytond.modules.account.tests.tools import create_fiscalyear, \
-    ...     create_chart, get_accounts, create_tax, set_tax_code
+    ...     create_chart, get_accounts
     >>> from trytond.modules.account_invoice.tests.tools import \
-    ...     set_fiscalyear_invoice_sequences, create_payment_term
+    ...     set_fiscalyear_invoice_sequences
     >>> today = datetime.date.today()
     >>> now = datetime.datetime.now()
 

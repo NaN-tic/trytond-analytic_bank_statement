@@ -64,7 +64,21 @@ class AnalyticAccountEntry:
         origins = super(AnalyticAccountEntry, cls)._get_origin()
         return origins + ['account.bank.statement.move.line']
 
+    @fields.depends('origin')
+    def on_change_with_company(self, name=None):
+        pool = Pool()
+        InvoiceLine = pool.get('account.invoice.line')
+        company = super(AnalyticAccountEntry, self).on_change_with_company(
+            name=name)
+        if isinstance(self.origin, InvoiceLine):
+            company = self.origin.company.id
+        return company
+
     @classmethod
     def search_company(cls, name, clause):
-        return [('origin.line.company',) + tuple(clause[1:]) +
-                tuple(('account.bank.statement.move.line',))]
+        domain = super(AnalyticAccountEntry, cls).search_company(name, clause),
+        return ['OR',
+            domain,
+            (('origin.line.company',) + tuple(clause[1:]) +
+                ('account.bank.statement.move.line',)),
+            ]

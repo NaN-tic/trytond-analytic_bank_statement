@@ -1,2 +1,5 @@
 Version 3.4.0 - 2015-12-16
 * Initial release
+
+Version 3.8.0 - 2017-02-20
+* Added support for runetime calculated fields

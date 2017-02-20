@@ -1,10 +1,131 @@
 # The COPYRIGHT file at the top level of this repository contains the full
 # copyright notices and license terms.
 from trytond.model import fields
+from trytond.pyson import PYSONEncoder
 from trytond.pool import Pool, PoolMeta
+from trytond.transaction import Transaction
+from trytond.model import ModelView, ModelSQL, fields
+import copy
 
-__all__ = ['StatementMoveLine']
+__all__ = ['StatementMoveLine', 'Account', 'AccountSelection',
+    'AccountAccountSelection']
 __metaclass__ = PoolMeta
+
+
+class Account:
+    __name__ = 'analytic_account.account'
+
+    @classmethod
+    def convert_view(cls, tree):
+        res = tree.xpath('//field[@name=\'analytic_accounts\']')
+        if not res:
+            return
+        element_accounts = res[0]
+        root_accounts = cls.search([
+                ('parent', '=', None),
+                ])
+        if not root_accounts:
+            element_accounts.getparent().getparent().remove(
+                    element_accounts.getparent())
+            return
+        for account in root_accounts:
+            newelement = copy.copy(element_accounts)
+            newelement.tag = 'label'
+            newelement.set('name', 'analytic_account_' + str(account.id))
+            element_accounts.addprevious(newelement)
+            newelement = copy.copy(element_accounts)
+            newelement.set('name', 'analytic_account_' + str(account.id))
+            element_accounts.addprevious(newelement)
+        parent = element_accounts.getparent()
+        parent.remove(element_accounts)
+
+    @classmethod
+    def analytic_accounts_fields_get(cls, field, fields_names=None,
+            states=None, required_states=None):
+        res = {}
+        if fields_names is None:
+            fields_names = []
+        if states is None:
+            states = {}
+
+        encoder = PYSONEncoder()
+
+        root_accounts = cls.search([
+                ('parent', '=', None),
+                ('company', '=', Transaction().context.get('company', -1)),
+                ])
+        for account in root_accounts:
+            name = 'analytic_account_' + str(account.id)
+            if name in fields_names or not fields_names:
+                res[name] = field.copy()
+                field_states = states.copy()
+                if account.mandatory:
+                    if required_states:
+                        field_states['required'] = required_states
+                    else:
+                        field_states['required'] = True
+                res[name]['states'] = encoder.encode(field_states)
+                res[name]['string'] = account.name
+                res[name]['relation'] = cls.__name__
+                res[name]['domain'] = PYSONEncoder().encode([
+                    ('root', '=', account.id),
+                    ('type', '=', 'normal'),
+                    ('company', '=', account.company.id)])
+        return res
+
+
+class AccountSelection(ModelSQL, ModelView):
+    'Analytic Account Selection'
+    __name__ = 'analytic_account.account.selection'
+
+    accounts = fields.Many2Many(
+            'analytic_account.account-analytic_account.account.selection',
+            'selection', 'account', 'Accounts')
+
+    @classmethod
+    def __setup__(cls):
+        super(AccountSelection, cls).__setup__()
+        cls._error_messages.update({
+                'root_account': ('Can not have many accounts with the same '
+                    'root or a missing mandatory root account on "%s".'),
+                })
+
+    @classmethod
+    def validate(cls, selections):
+        super(AccountSelection, cls).validate(selections)
+        cls.check_root(selections)
+
+    @classmethod
+    def check_root(cls, selections):
+        "Check Root"
+        Account = Pool().get('analytic_account.account')
+
+        root_accounts = Account.search([
+            ('parent', '=', None),
+            ])
+
+        for selection in selections:
+            roots = []
+            for account in selection.accounts:
+                if account.root.id in roots:
+                    cls.raise_user_error('root_account', (account.rec_name,))
+                roots.append(account.root.id)
+            if Transaction().user:  # Root can by pass
+                for account in root_accounts:
+                    if account.mandatory:
+                        if account.id not in roots:
+                            cls.raise_user_error('root_account',
+                                (account.rec_name,))
+
+
+class AccountAccountSelection(ModelSQL):
+    'Analytic Account - Analytic Account Selection'
+    __name__ = 'analytic_account.account-analytic_account.account.selection'
+    _table = 'analytic_account_account_selection_rel'
+    selection = fields.Many2One('analytic_account.account.selection',
+            'Selection', ondelete='CASCADE', required=True, select=True)
+    account = fields.Many2One('analytic_account.account', 'Account',
+            ondelete='RESTRICT', required=True, select=True)
 
 
 class StatementMoveLine:

@@ -7,9 +7,18 @@ from trytond.transaction import Transaction
 from trytond.model import ModelView, ModelSQL, fields
 import copy
 
-__all__ = ['StatementMoveLine', 'Account', 'AccountSelection',
-    'AccountAccountSelection']
+__all__ = ['AccountAccountSelection', 'StatementMoveLine', 'Account', 'AccountSelection']
 __metaclass__ = PoolMeta
+
+
+class AccountAccountSelection(ModelSQL):
+    'Analytic Account - Analytic Account Selection'
+    __name__ = 'analytic_account.account-analytic_account.account.selection'
+    _table = 'analytic_account_account_selection'
+    selection = fields.Many2One('analytic_account.account.selection',
+            'Selection', ondelete='CASCADE', select=True)
+    account = fields.Many2One('analytic_account.account', 'Account',
+            ondelete='RESTRICT', select=True)
 
 
 class Account:
@@ -116,16 +125,6 @@ class AccountSelection(ModelSQL, ModelView):
                         if account.id not in roots:
                             cls.raise_user_error('root_account',
                                 (account.rec_name,))
-
-
-class AccountAccountSelection(ModelSQL):
-    'Analytic Account - Analytic Account Selection'
-    __name__ = 'analytic_account.account-analytic_account.account.selection'
-    _table = 'analytic_account_account_selection_rel'
-    selection = fields.Many2One('analytic_account.account.selection',
-            'Selection', ondelete='CASCADE', required=True, select=True)
-    account = fields.Many2One('analytic_account.account', 'Account',
-            ondelete='RESTRICT', required=True, select=True)
 
 
 class StatementMoveLine:

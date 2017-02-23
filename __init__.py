@@ -6,8 +6,8 @@ from .statement import *
 
 def register():
     Pool.register(
+        AccountAccountSelection,
         StatementMoveLine,
         Account,
         AccountSelection,
-        AccountAccountSelection,
         module='analytic_bank_statement', type_='model')

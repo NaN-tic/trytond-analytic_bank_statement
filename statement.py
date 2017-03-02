@@ -7,7 +7,8 @@ from trytond.transaction import Transaction
 from trytond.model import ModelView, ModelSQL, fields
 import copy
 
-__all__ = ['AccountAccountSelection', 'StatementMoveLine', 'Account', 'AccountSelection']
+__all__ = ['AccountAccountSelection', 'StatementMoveLine', 'Account',
+    'AccountSelection']
 __metaclass__ = PoolMeta
 
 
@@ -322,6 +323,6 @@ class StatementMoveLine:
                     analytic_line.reference = (self.invoice.reference
                         if self.invoice else None)
                     analytic_line.party = self.party
-                    move_line.analytic_lines.append(analytic_line)
 
+                    list(move_line.analytic_lines).append(analytic_line)
         return move_lines

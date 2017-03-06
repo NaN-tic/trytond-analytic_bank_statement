@@ -323,6 +323,8 @@ class StatementMoveLine:
                     analytic_line.reference = (self.invoice.reference
                         if self.invoice else None)
                     analytic_line.party = self.party
-
-                    list(move_line.analytic_lines).append(analytic_line)
+                    if not move_line.analytic_lines:
+                        move_line.analytic_lines = [analytic_line]
+                    else:
+                        move_line.analytic_lines += [analytic_line]
         return move_lines

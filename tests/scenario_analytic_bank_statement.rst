@@ -7,6 +7,7 @@ Imports::
     >>> import datetime
     >>> from decimal import Decimal
     >>> from proteus import config, Model, Wizard
+    >>> from trytond.tests.tools import activate_modules
     >>> from trytond.modules.company.tests.tools import create_company, \
     ...     get_company
     >>> from trytond.modules.account.tests.tools import create_fiscalyear, \
@@ -16,29 +17,15 @@ Imports::
     >>> today = datetime.date.today()
     >>> now = datetime.datetime.now()
 
-Create database::
-
-    >>> config = config.set_trytond()
-    >>> config.pool.test = True
-
 Install account_bank_statement::
 
-    >>> Module = Model.get('ir.module')
-    >>> account_bank_module, = Module.find(
-    ...     [('name', '=', 'analytic_bank_statement')])
-    >>> Module.install([account_bank_module.id], config.context)
-    >>> Wizard('ir.module.install_upgrade').execute('upgrade')
+    >>> config = activate_modules('analytic_bank_statement')
 
 Create company::
 
     >>> _ = create_company()
     >>> company = get_company()
     >>> party = company.party
-
-Reload the context::
-
-    >>> User = Model.get('res.user')
-    >>> config._context = User.get_preferences(True, config.context)
 
 Create fiscal year::
 
@@ -163,9 +150,8 @@ Check bank commission line has analytic accounts::
     ...     key=lambda l: l.amount)
     >>> commission_line.amount
     Decimal('-0.42')
-    >>> commission_line.analytic_accounts != None
-    ...     and commission_line.analytic_accounts.accounts != None
-    True
+    >>> len(commission_line.analytic_accounts)
+    1
 
 Post statement line::
 

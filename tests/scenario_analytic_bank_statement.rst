@@ -119,7 +119,7 @@ Confirm bank statement::
     >>> BankStatement.confirm([statement.id], config.context)
     >>> statement.reload()
     >>> statement.state
-    u'confirmed'
+    'confirmed'
 
 Add transaction lines to bank statement line::
 
@@ -201,7 +201,7 @@ Confirm second bank statement::
     >>> BankStatement.confirm([statement2.id], config.context)
     >>> statement2.reload()
     >>> statement2.state
-    u'confirmed'
+    'confirmed'
 
 Add transaction lines to second bank statement line::
 

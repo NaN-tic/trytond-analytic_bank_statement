@@ -7,16 +7,14 @@ from trytond.pool import Pool, PoolMeta
 __all__ = ['BankJournal', 'StatementMoveLine', 'AnalyticAccountEntry']
 
 
-class BankJournal:
-    __metaclass__ = PoolMeta
+class BankJournal(metaclass=PoolMeta):
     __name__ = 'account.bank.statement.journal'
     analytics_on_bank_moves = fields.Boolean('Analytics on Bank Moves',
         help='Generate analytic lines in the move lines on journal accounts '
         'from Bank Statement Move Lines.')
 
 
-class StatementMoveLine(AnalyticMixin):
-    __metaclass__ = PoolMeta
+class StatementMoveLine(AnalyticMixin, metaclass=PoolMeta):
     __name__ = 'account.bank.statement.move.line'
 
     def _get_move_lines(self):
@@ -55,8 +53,7 @@ class StatementMoveLine(AnalyticMixin):
         return move_lines
 
 
-class AnalyticAccountEntry:
-    __metaclass__ = PoolMeta
+class AnalyticAccountEntry(metaclass=PoolMeta):
     __name__ = 'analytic.account.entry'
 
     @classmethod

@@ -91,13 +91,11 @@ Create journals::
     >>> AccountJournal = Model.get('account.journal')
     >>> account_journal = AccountJournal(name='Statement',
     ...     type='cash',
-    ...     credit_account=cash,
-    ...     debit_account=cash,
     ...     sequence=sequence)
     >>> account_journal.save()
     >>> StatementJournal = Model.get('account.bank.statement.journal')
     >>> statement_journal = StatementJournal(name='Test',
-    ...     journal=account_journal)
+    ...     journal=account_journal, account=cash)
     >>> statement_journal.save()
 
 Create bank statement::
@@ -183,7 +181,7 @@ Test analytic lines in expected move lines::
 Create bank journal configured to generate analytics in bank move lines::
 
     >>> statement_journal2 = StatementJournal(name='Test',
-    ...     journal=account_journal, analytics_on_bank_moves=True)
+    ...     journal=account_journal, analytics_on_bank_moves=True, account=cash)
     >>> statement_journal2.save()
 
 Create second bank statement::

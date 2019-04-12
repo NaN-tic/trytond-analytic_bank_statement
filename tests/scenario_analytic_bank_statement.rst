@@ -169,7 +169,7 @@ Test analytic lines in expected move lines::
     >>> not cash_move_line.analytic_lines
     True
     >>> expense_move_line, = [ml for ml in commission_line.move.lines
-    ...     if ml.account.kind == 'expense']
+    ...     if ml.account.type.expense == True]
     >>> len(expense_move_line.analytic_lines)
     1
     >>> (expense_move_line.analytic_lines[0].account

@@ -34,17 +34,10 @@ class StatementMoveLine(AnalyticMixin, metaclass=PoolMeta):
                                 and move_line.account != self.account):
                             continue
                         analytic_line = AnalyticLine()
-                        analytic_line.name = (self.description
-                            if self.description
-                            else self.line.description)
                         analytic_line.debit = move_line.debit
                         analytic_line.credit = move_line.credit
                         analytic_line.account = account
-                        analytic_line.journal = self.line.journal.journal
                         analytic_line.date = self.date
-                        analytic_line.reference = (self.invoice.reference
-                            if self.invoice else None)
-                        analytic_line.party = self.party
                         if not hasattr(move_line, 'analytic_lines'):
                             move_line.analytic_lines = (analytic_line,)
                         else:

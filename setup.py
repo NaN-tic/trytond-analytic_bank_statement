@@ -10,6 +10,8 @@ from configparser import ConfigParser
 MODULE = 'analytic_bank_statement'
 PREFIX = 'nantic'
 MODULE2PREFIX = {
+    'account_move_draft': 'trytonspain',
+    'account_bank_statement': 'trytonspain',
     'account_bank_statement_account': 'trytonspain',
     }
 
@@ -55,9 +57,21 @@ if minor_version % 2:
 else:
     branch = series
 dependency_links = [
-    ('hg+https://bitbucket.org/trytonspain/'
+    ('git+https://github.com/trytonspain/'
+        'trytond-account_bank_statement@%(branch)s'
+        '#egg=trytonspain-account_bank_statement-%(series)s' % {
+            'branch': branch,
+            'series': series,
+            }),
+    ('git+https://github.com/trytonspain/'
         'trytond-account_bank_statement_account@%(branch)s'
         '#egg=trytonspain-account_bank_statement_account-%(series)s' % {
+            'branch': branch,
+            'series': series,
+            }),
+    ('git+https://github.com/trytonspain/'
+        'trytond-account_move_draft@%(branch)s'
+        '#egg=trytonspain-account_move_draft-%(series)s' % {
             'branch': branch,
             'series': series,
             }),
@@ -73,7 +87,7 @@ setup(name='%s_%s' % (PREFIX, MODULE),
     author='NaN·tic',
     author_email='info@nan-tic.com',
     url='http://www.nan-tic.com/',
-    download_url="https://bitbucket.org/nantic/trytond-%s" % MODULE,
+    download_url="https://github.com/NaN-tic/trytond-%s" % MODULE,
     package_dir={'trytond.modules.%s' % MODULE: '.'},
     packages=[
         'trytond.modules.%s' % MODULE,

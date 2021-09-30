@@ -10,7 +10,6 @@ from configparser import ConfigParser
 MODULE = 'analytic_bank_statement'
 PREFIX = 'nantic'
 MODULE2PREFIX = {
-    'account_move_draft': 'trytonspain',
     'account_bank_statement': 'trytonspain',
     'account_bank_statement_account': 'trytonspain',
     }

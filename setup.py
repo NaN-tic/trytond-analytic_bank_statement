@@ -68,12 +68,6 @@ dependency_links = [
             'branch': branch,
             'series': series,
             }),
-    ('git+https://github.com/trytonspain/'
-        'trytond-account_move_draft@%(branch)s'
-        '#egg=trytonspain-account_move_draft-%(series)s' % {
-            'branch': branch,
-            'series': series,
-            }),
     ]
 if minor_version % 2:
     # Add development index for testing with proteus

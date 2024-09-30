@@ -61,7 +61,7 @@ class AnalyticAccountEntry(metaclass=PoolMeta):
         company = super(AnalyticAccountEntry, self).on_change_with_company(
             name=name)
         if isinstance(self.origin, InvoiceLine):
-            company = self.origin.company.id
+            company = self.origin.company and self.origin.company.id
         return company
 
     @classmethod
